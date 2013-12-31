@@ -81,23 +81,35 @@
         [containerView addSubview:content];
         [containerView addSubview:bottomView];
 
-        [UIView animateWithDuration:[self transitionDuration:transitionContext]
-                         animations:^{
-                             topView.transform = CGAffineTransformMakeTranslation(0, -topView.frame.size.height + 64);
-                             
-                             CGRect targetFrame = [toController.view viewWithTag:1000].frame;
-                             
-                             content.frame = targetFrame;
-                             bottomView.transform = CGAffineTransformMakeTranslation(0, bottomView.frame.size.height);
-                         } completion:^(BOOL finished) {
-                             [transitionContext completeTransition:finished];
-                             
-                             [topView removeFromSuperview];
-                             [content removeFromSuperview];
-                             [bottomView removeFromSuperview];
+        [UIView animateKeyframesWithDuration:[self transitionDuration:transitionContext]
+                                       delay:0
+                                     options:0
+                                  animations:^{
+                                      
+                                      [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.8
+                                                                    animations:^{
+                                                                        topView.transform = CGAffineTransformMakeTranslation(0, -topView.frame.size.height + 64);
+                                                                        
+                                                                        CGRect targetFrame = [toController.view viewWithTag:1000].frame;
+                                                                        
+                                                                        content.frame = targetFrame;
+                                                                        bottomView.transform = CGAffineTransformMakeTranslation(0, bottomView.frame.size.height);
+                                                                    }];
 
-                             NSLog(@"containerView %@", containerView);
-                         }];
+                                      [UIView addKeyframeWithRelativeStartTime:0.8 relativeDuration:0.2
+                                                                    animations:^{
+                                                                        topView.alpha = 0;
+                                                                        content.alpha = 0;
+                                                                    }];
+                                      
+                                  } completion:^(BOOL finished) {
+                                      [transitionContext completeTransition:finished];
+                                      
+                                      [topView removeFromSuperview];
+                                      [content removeFromSuperview];
+                                      [bottomView removeFromSuperview];
+                                  }];
+
     }
 }
 
