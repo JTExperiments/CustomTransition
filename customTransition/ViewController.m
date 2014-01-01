@@ -33,13 +33,8 @@
                                    animationControllerForOperation:(UINavigationControllerOperation)operation
                                                 fromViewController:(UIViewController *)fromVC
                                                   toViewController:(UIViewController *)toVC {
-    
-    if (operation == UINavigationControllerOperationPush) {
-        self.operation = operation;
-        return self;
-    }
-    self.operation = 0;
-    return nil;
+    self.operation = operation;
+    return self;
 }
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
@@ -54,6 +49,7 @@
     UINavigationControllerOperation operation   = self.operation;
     CGRect toFinalFrame                         = [transitionContext finalFrameForViewController:toController];
     CGRect fromFinalFrame                       = [transitionContext finalFrameForViewController:fromController];
+    NSTimeInterval duration                     = [self transitionDuration:transitionContext];
 
     if (operation == UINavigationControllerOperationPush) {
         
@@ -66,7 +62,6 @@
         
         UIView *content = [self snapshotViewFromView:self.view
                                                 rect:self.contentView.frame];
-
 
 //        NSLog(@"%@", @{
 //                       @"contentView":NSStringFromCGRect(self.contentView.frame),
@@ -81,34 +76,95 @@
         [containerView addSubview:content];
         [containerView addSubview:bottomView];
 
-        [UIView animateKeyframesWithDuration:[self transitionDuration:transitionContext]
+        [UIView animateKeyframesWithDuration:duration
                                        delay:0
                                      options:0
-                                  animations:^{
-                                      
-                                      [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.8
-                                                                    animations:^{
-                                                                        topView.transform = CGAffineTransformMakeTranslation(0, -topView.frame.size.height + 64);
-                                                                        
-                                                                        CGRect targetFrame = [toController.view viewWithTag:1000].frame;
-                                                                        
-                                                                        content.frame = targetFrame;
-                                                                        bottomView.transform = CGAffineTransformMakeTranslation(0, bottomView.frame.size.height);
-                                                                    }];
+                                  animations:^
+         {
 
-                                      [UIView addKeyframeWithRelativeStartTime:0.8 relativeDuration:0.2
-                                                                    animations:^{
-                                                                        topView.alpha = 0;
-                                                                        content.alpha = 0;
-                                                                    }];
-                                      
-                                  } completion:^(BOOL finished) {
-                                      [transitionContext completeTransition:finished];
-                                      
-                                      [topView removeFromSuperview];
-                                      [content removeFromSuperview];
-                                      [bottomView removeFromSuperview];
-                                  }];
+             [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.8
+                                           animations:^
+              {
+                  topView.transform = CGAffineTransformMakeTranslation(0, -topView.frame.size.height + 64);
+
+                  CGRect targetFrame = [toController.view viewWithTag:1000].frame;
+
+                  content.frame = targetFrame;
+                  bottomView.transform = CGAffineTransformMakeTranslation(0, bottomView.frame.size.height);
+              }];
+
+             [UIView addKeyframeWithRelativeStartTime:0.8 relativeDuration:0.2
+                                           animations:^
+              {
+                  topView.alpha = 0;
+                  content.alpha = 0;
+              }];
+
+         } completion:^(BOOL finished) {
+             [transitionContext completeTransition:finished];
+
+             [topView removeFromSuperview];
+             [content removeFromSuperview];
+             [bottomView removeFromSuperview];
+         }];
+
+    } else if (operation == UINavigationControllerOperationPop) {
+
+        [containerView addSubview:toController.view];
+        toController.view.frame = toFinalFrame;
+
+        UIView *topView = [self snapshotViewFromView:self.view
+                                                rect:CGRectMake(0, 0, 320, CGRectGetMaxY(self.headerView.frame))];
+        
+        UIView *content = [self snapshotViewFromView:self.view
+                                                rect:self.contentView.frame];
+        
+        CGRect bottomRect = CGRectMake(0, CGRectGetMaxY(self.contentView.frame), 320, CGRectGetHeight(self.view.bounds) - CGRectGetMaxY(self.contentView.frame));
+        UIView *bottomView = [self snapshotViewFromView:self.view
+                                                   rect:bottomRect];
+        
+        [containerView addSubview:fromController.view];
+
+        [containerView addSubview:topView];
+        [containerView addSubview:content];
+        [containerView addSubview:bottomView];
+
+        topView.transform = CGAffineTransformMakeTranslation(0, -topView.frame.size.height + 64);
+        topView.alpha = 0;
+        content.alpha = 0;
+        content.frame = [fromController.view viewWithTag:1000].frame;
+        bottomView.transform = CGAffineTransformMakeTranslation(0, bottomView.frame.size.height);
+
+        [UIView animateKeyframesWithDuration:duration
+                                       delay:0
+                                     options:0
+                                  animations:^
+         {
+
+             [UIView addKeyframeWithRelativeStartTime:0
+                                     relativeDuration:0.2
+                                           animations:^
+              {
+                  topView.alpha = 1;
+                  content.alpha = 1;
+              }];
+
+             [UIView addKeyframeWithRelativeStartTime:0.2
+                                     relativeDuration:0.8
+                                           animations:^
+              {
+                  CGRect targetFrame = [toController.view viewWithTag:1000].frame;
+                  topView.transform = CGAffineTransformIdentity;
+                  content.frame = targetFrame;
+                  bottomView.transform = CGAffineTransformIdentity;
+              }];
+
+         } completion:^(BOOL finished) {
+             [topView removeFromSuperview];
+             [content removeFromSuperview];
+             [bottomView removeFromSuperview];
+             [transitionContext completeTransition:finished];
+         }];
 
     }
 }
