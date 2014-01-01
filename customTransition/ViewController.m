@@ -20,7 +20,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.navigationController.delegate = self;
+    // If you're not using CSNavigationController, you should specify
+    // self as the UINavigationControllerDelegate
+
+//    self.navigationController.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -227,6 +230,31 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     imageView.frame = CGRectOffset(imageView.bounds, 0, rect.origin.y);
     return imageView;
+}
+
+@end
+
+
+@implementation CSNavigationController (CustomTransitioning)
+
+- (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                   animationControllerForOperation:(UINavigationControllerOperation)operation
+                                                fromViewController:(UIViewController *)fromVC
+                                                  toViewController:(UIViewController *)toVC {
+ 
+    if ([fromVC respondsToSelector:@selector(navigationController:animationControllerForOperation:fromViewController:toViewController:)]) {
+        return [(id <UINavigationControllerDelegate>)fromVC navigationController:navigationController
+                                                 animationControllerForOperation:operation
+                                                              fromViewController:fromVC
+                                                                toViewController:toVC];
+    } else if ([toVC respondsToSelector:@selector(navigationController:animationControllerForOperation:fromViewController:toViewController:)]) {
+            return [(id <UINavigationControllerDelegate>)toVC navigationController:navigationController
+                                                     animationControllerForOperation:operation
+                                                                  fromViewController:fromVC
+                                                                    toViewController:toVC];
+    }
+
+    return nil;
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CSNavigationController.h"
 
 @interface ViewController : UIViewController
 
@@ -14,5 +15,10 @@
 @property (weak, nonatomic) IBOutlet UIView *footerView;
 @property (weak, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIView *nextHeaderView;
+
+@end
+
+
+@interface CSNavigationController (CustomTransitioning)
 
 @end

@@ -76,6 +76,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Feed" id="ood-ig-cpr"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="CSBarTintColor">
+                            <color key="value" red="0.16862745579999999" green="0.29803922770000002" blue="0.41176471110000001" alpha="1" colorSpace="calibratedRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="contentView" destination="T4s-zJ-mr9" id="HUN-vj-MH7"/>
                         <outlet property="footerView" destination="m6A-qc-cY8" id="7zl-E4-cUP"/>
@@ -151,6 +156,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="seB-PT-wuk"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="CSBarTintColor">
+                            <color key="value" red="0.25490197539329529" green="0.73725491762161255" blue="0.61960786581039429" alpha="1" colorSpace="deviceRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fGh-0h-Xn9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -159,11 +169,16 @@
         <!--Navigation Controller-->
         <scene sceneID="BmO-Cp-vFb">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PCy-cO-VGn" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PCy-cO-VGn" customClass="CSNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="okK-zT-EnX">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.16862745579999999" green="0.29803922770000002" blue="0.41176471110000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
